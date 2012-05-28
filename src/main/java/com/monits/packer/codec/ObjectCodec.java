@@ -13,14 +13,14 @@ import org.apache.commons.beanutils.MethodUtils;
 import com.monits.packer.CodecFactory;
 import com.monits.packer.annotation.Encode;
 
-public class ObjectCodec<E> implements Codec<E> {
+public class ObjectCodec<E> extends Codec<E> {
 	
 	private Class<? extends E> struct;
 	
 	private List<FieldData> fields;
 
-	public ObjectCodec(Class<? extends E> struct) {
-		super();
+	public ObjectCodec(Class<? extends E> struct, Encode metadata) {
+		super(metadata);
 		
 		this.struct = struct;
 		
@@ -31,25 +31,9 @@ public class ObjectCodec<E> implements Codec<E> {
 				FieldData data = new FieldData();
 				
 				data.metadata = annotation;
+				data.codec = CodecFactory.get(field.getType(), annotation);
+				
 				data.field = field;
-				
-				if (annotation.codec() != null && !annotation.codec().isAssignableFrom(StubCodec.class)) {
-					
-					try {
-						data.codec = annotation.codec().newInstance();
-					} catch (InstantiationException e) {
-					} catch (IllegalAccessException e) {
-					}
-				}
-				
-				if (data.codec == null) {
-					data.codec = CodecFactory.get(field, annotation.as());
-					
-					if (data.codec == null) {
-						continue;
-					}
-				}
-				
 				data.field.setAccessible(true);
 				
 				fields.add(data);

@@ -3,6 +3,7 @@ package com.monits.packer.codec;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.monits.packer.CodecFactory;
 import com.monits.packer.EncodingType;
 import com.monits.packer.annotation.Encode;
 
@@ -13,7 +14,7 @@ public class ObjectCodecTest {
 		 SimpleObject original = new SimpleObject();
 		 original.setValue(5);
 		 
-		 ObjectCodec<SimpleObject> codec = new ObjectCodec<SimpleObject>(SimpleObject.class);
+		 Codec<SimpleObject> codec = CodecFactory.get(SimpleObject.class);
 		 byte[] encoded = codec.encode(original, null);
 		 Assert.assertArrayEquals(new byte[] { 00, 05 }, encoded);
 		 
@@ -33,7 +34,7 @@ public class ObjectCodecTest {
 		original.setUint(232);
 		original.setUshort((short) 255);
 		
-		ObjectCodec<ComplexObject> codec = new ObjectCodec<ComplexObject>(ComplexObject.class);
+		Codec<ComplexObject> codec = CodecFactory.get(ComplexObject.class);
 		byte[] encoded = codec.encode(original, null);
 		
 		ComplexObject decoded = codec.decode(encoded, null);
@@ -44,6 +45,7 @@ public class ObjectCodecTest {
 		Assert.assertEquals(decoded.getUshort(), original.getUshort());
 	}
 	
+	@Encode
 	public static class SimpleObject {
 		
 		@Encode(value = 0, as = EncodingType.UNSIGNED_INT16)
@@ -62,6 +64,7 @@ public class ObjectCodecTest {
 		
 	}
 	
+	@Encode
 	public static class ComplexObject {
 		
 		@Encode(value = 0)

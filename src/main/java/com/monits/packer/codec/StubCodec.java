@@ -1,6 +1,12 @@
 package com.monits.packer.codec;
 
-public final class StubCodec implements Codec<Object> {
+import com.monits.packer.annotation.Encode;
+
+public final class StubCodec extends Codec<Object> {
+
+	public StubCodec(Encode metadata) {
+		super(metadata);
+	}
 
 	@Override
 	public byte[] encode(Object object, Object[] dependants) {

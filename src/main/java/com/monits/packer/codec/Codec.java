@@ -1,11 +1,20 @@
 package com.monits.packer.codec;
 
-public interface Codec<E> {
-	
-	public byte[] encode(E object, Object[] dependants);
+import com.monits.packer.annotation.Encode;
 
-	public E decode(byte[] payload, Object[] dependants);
+public abstract class Codec<E> {
 	
-	public int computeSize(Object[] dependants);
+	protected Encode metadata;
+	
+	public Codec(Encode metadata) {
+		super();
+		this.metadata = metadata;
+	}
+
+	public abstract byte[] encode(E object, Object[] dependants);
+
+	public abstract E decode(byte[] payload, Object[] dependants);
+	
+	public abstract int computeSize(Object[] dependants);
 
 }

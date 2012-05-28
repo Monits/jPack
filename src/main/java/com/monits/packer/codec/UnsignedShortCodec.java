@@ -1,6 +1,12 @@
 package com.monits.packer.codec;
 
-public class UnsignedShortCodec implements Codec<Integer> {
+import com.monits.packer.annotation.Encode;
+
+public class UnsignedShortCodec extends Codec<Integer> {
+
+	public UnsignedShortCodec(Encode metadata) {
+		super(metadata);
+	}
 
 	@Override
 	public byte[] encode(Integer payload, Object[] dependants) {
