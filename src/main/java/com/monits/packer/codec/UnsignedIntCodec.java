@@ -1,36 +1,30 @@
 package com.monits.packer.codec;
 
-import com.monits.packer.annotation.Encode;
+import com.monits.packer.streams.InputByteStream;
+import com.monits.packer.streams.OutputByteStream;
 
-public class UnsignedIntCodec extends Codec<Long> {
 
-	public UnsignedIntCodec(Encode metadata) {
-		super(metadata);
-	}
+public class UnsignedIntCodec implements Codec<Long> {
 
 	@Override
-	public byte[] encode(Long payload, Object[] dependants) {
-		long val = payload;
+	public void encode(OutputByteStream payload, Long object, Object[] dependants) {
+		long val = object;
 		
-		return new byte[] {
-			(byte) ((0xFF000000 & val) >> 24),
-			(byte) ((0x00FF0000 & val) >> 16),
-			(byte) ((0x0000FF00 & val) >> 8),
-			(byte)  (0x000000FF & val)
-		};
+		payload.putByte((byte) ((0xFF000000 & val) >> 24));
+		payload.putByte((byte) ((0x0000FF00 & val) >> 8));
+		payload.putByte((byte) ((0x00FF0000 & val) >> 16));
+		payload.putByte((byte)  (0x000000FF & val));
 	}
 
 	@Override
-	public Long decode(byte[] payload, Object[] dependants) {
-		return ((((long) payload[0]) & 0xFF) << 24)
-			| ((((long) payload[1]) & 0xFF) << 16)
-			| ((((long) payload[2]) & 0xFF) << 8)
-			| (((long) payload[3]) & 0xFF);
-	}
-
-	@Override
-	public int computeSize(Object[] dependants) {
-		return 4;
+	public Long decode(InputByteStream payload, Object[] dependants) {
+		
+		byte[] data = payload.getBytes(4);
+		
+		return ((((long) data[0]) & 0xFF) << 24)
+			| ((((long) data[1]) & 0xFF) << 16)
+			| ((((long) data[2]) & 0xFF) << 8)
+			| (((long) data[3]) & 0xFF);
 	}
 
 }

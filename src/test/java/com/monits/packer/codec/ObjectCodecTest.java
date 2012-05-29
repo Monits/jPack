@@ -3,9 +3,9 @@ package com.monits.packer.codec;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.monits.packer.CodecFactory;
-import com.monits.packer.EncodingType;
+import com.monits.packer.Packer;
 import com.monits.packer.annotation.Encode;
+import com.monits.packer.annotation.Unsigned;
 
 public class ObjectCodecTest {
 
@@ -14,11 +14,10 @@ public class ObjectCodecTest {
 		 SimpleObject original = new SimpleObject();
 		 original.setValue(5);
 		 
-		 Codec<SimpleObject> codec = CodecFactory.get(SimpleObject.class);
-		 byte[] encoded = codec.encode(original, null);
+		 byte[] encoded = Packer.encode(original);
 		 Assert.assertArrayEquals(new byte[] { 00, 05 }, encoded);
 		 
-		 SimpleObject decoded = codec.decode(encoded, null);
+		 SimpleObject decoded = Packer.decode(SimpleObject.class, encoded);
 		 Assert.assertNotNull(decoded);
 		 Assert.assertEquals(original.getValue(), decoded.getValue());
 	}
@@ -34,10 +33,12 @@ public class ObjectCodecTest {
 		original.setUint(232);
 		original.setUshort((short) 255);
 		
-		Codec<ComplexObject> codec = CodecFactory.get(ComplexObject.class);
-		byte[] encoded = codec.encode(original, null);
+		byte[] encoded = Packer.encode(original);
+		Assert.assertNotNull(encoded);
+		Assert.assertTrue(encoded.length > 0);
 		
-		ComplexObject decoded = codec.decode(encoded, null);
+		ComplexObject decoded = Packer.decode(ComplexObject.class, encoded);
+		
 		Assert.assertNotNull(decoded);
 		Assert.assertNotNull(decoded.getNested());
 		Assert.assertEquals(decoded.getNested().getValue(), original.getNested().getValue());
@@ -45,10 +46,10 @@ public class ObjectCodecTest {
 		Assert.assertEquals(decoded.getUshort(), original.getUshort());
 	}
 	
-	@Encode
 	public static class SimpleObject {
 		
-		@Encode(value = 0, as = EncodingType.UNSIGNED_INT16)
+		@Unsigned
+		@Encode(0)
 		private int value;
 		
 		public SimpleObject() {
@@ -64,16 +65,18 @@ public class ObjectCodecTest {
 		
 	}
 	
-	@Encode
 	public static class ComplexObject {
 		
-		@Encode(value = 0)
+		@Unsigned
+		@Encode(0)
 		private SimpleObject nested;
 		
-		@Encode(value = 1, as = EncodingType.UNSIGNED_INT16)
+		@Unsigned
+		@Encode(1)
 		private int uint;
 		
-		@Encode(value = 2, as = EncodingType.UNSIGNED_BYTE)
+		@Unsigned
+		@Encode(2)
 		private short ushort;
 
 		public SimpleObject getNested() {

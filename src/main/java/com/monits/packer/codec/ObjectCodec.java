@@ -12,15 +12,16 @@ import org.apache.commons.beanutils.MethodUtils;
 
 import com.monits.packer.CodecFactory;
 import com.monits.packer.annotation.Encode;
+import com.monits.packer.streams.InputByteStream;
+import com.monits.packer.streams.OutputByteStream;
 
-public class ObjectCodec<E> extends Codec<E> {
+public class ObjectCodec<E> implements Codec<E> {
 	
 	private Class<? extends E> struct;
 	
 	private List<FieldData> fields;
 
-	public ObjectCodec(Class<? extends E> struct, Encode metadata) {
-		super(metadata);
+	public ObjectCodec(Class<? extends E> struct) {
 		
 		this.struct = struct;
 		
@@ -31,7 +32,7 @@ public class ObjectCodec<E> extends Codec<E> {
 				FieldData data = new FieldData();
 				
 				data.metadata = annotation;
-				data.codec = CodecFactory.get(field.getType(), annotation);
+				data.codec = CodecFactory.get(field);
 				
 				data.field = field;
 				data.field.setAccessible(true);
@@ -50,42 +51,31 @@ public class ObjectCodec<E> extends Codec<E> {
 		});
 	}
 	
-	public byte[] encode(E obj, Object[] dependants) {
+	@Override
+	public void encode(OutputByteStream payload, E obj, Object[] dependants) {
 		
-		byte[] res = new byte[computeSize(null)];
-		int offset = 0;
 		for (FieldData field : fields) {
 			
 			try {
 				Object value = field.field.get(obj);
-				byte[] encoded = (byte[]) invokeEncode(field, value);
-				System.arraycopy(encoded, 0, res, offset, encoded.length);
-				
-				offset += encoded.length;
+				Object[] params = new Object[] { payload, value, new Object[0] };
+				MethodUtils.invokeMethod(field.codec, "encode", params);
 			} catch (IllegalArgumentException e) {
-				return null;
+				return;
 			} catch (IllegalAccessException e) {
-				return null;
+				return;
 			} catch (InvocationTargetException e) {
-				return null;
+				return;
 			} catch (NoSuchMethodException e) {
-				return null;
+				return;
 			}
 			
 		}
 		
-		return res;
-	}
-
-	private Object invokeEncode(FieldData field, Object value)
-			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-		
-		Object[] params = new Object[] { value, new Object[0] };
-		return MethodUtils.invokeMethod(field.codec, "encode", params);
 	}
 
 	@Override
-	public E decode(byte[] payload, Object[] dependants) {
+	public E decode(InputByteStream payload, Object[] dependants) {
 		
 		E res;
 		try {
@@ -100,15 +90,11 @@ public class ObjectCodec<E> extends Codec<E> {
 			return null;
 		}
 		
-		int offset = 0;
 		for (FieldData field : fields) {
 			
-			byte[] data = new byte[field.codec.computeSize(null)];
-			System.arraycopy(payload, offset, data, 0, data.length);
-			offset += data.length;
-			
 			try {
-				Object value = invokeDecode(field, data);
+				Object[] params = new Object[] { payload, new Object[0] };
+				Object value = MethodUtils.invokeMethod(field.codec, "decode", params);
 				field.field.set(res, value);
 			} catch (IllegalArgumentException e) {
 				return null;
@@ -124,25 +110,6 @@ public class ObjectCodec<E> extends Codec<E> {
 		
 		return res;
 	}
-
-	private Object invokeDecode(FieldData field, byte[] data)
-			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-		
-		Object[] params = new Object[] { data, new Object[0] };
-		return MethodUtils.invokeMethod(field.codec, "decode", params);
-	}
-
-	@Override
-	public int computeSize(Object[] dependants) {
-		
-		int size = 0;
-		for (FieldData data : fields) {
-			size += data.codec.computeSize(null);
-		}
-		
-		return size;
-	}
-
 
 	private static class FieldData {
 		

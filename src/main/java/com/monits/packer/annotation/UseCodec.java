@@ -5,10 +5,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.monits.packer.codec.Codec;
+
 @Target(value = { ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Encode {
+public @interface UseCodec {
 
-	public int value() default 0; 
+	public Class<? extends Codec<?>> value();
+	
+	public String[] dependsOn() default {};
 	
 }

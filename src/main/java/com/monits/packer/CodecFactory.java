@@ -1,9 +1,10 @@
 package com.monits.packer;
 
-import com.monits.packer.annotation.Encode;
+import java.lang.reflect.Field;
+
+import com.monits.packer.annotation.Unsigned;
 import com.monits.packer.codec.Codec;
 import com.monits.packer.codec.ObjectCodec;
-import com.monits.packer.codec.StubCodec;
 import com.monits.packer.codec.UnsignedByteCodec;
 import com.monits.packer.codec.UnsignedIntCodec;
 import com.monits.packer.codec.UnsignedShortCodec;
@@ -11,41 +12,28 @@ import com.monits.packer.codec.UnsignedShortCodec;
 public class CodecFactory {
 	
 	public static <E> Codec<E> get(Class <E> clz) {
-		
-		Encode metadata = clz.getAnnotation(Encode.class);
-		if (metadata == null) {
-			return null;
-		}
-
-		if (metadata.codec() != null && !metadata.codec().isAssignableFrom(StubCodec.class)) {
-
-			try {
-				//FIXME: This will blow up in a million pieces
-				return (Codec<E>) metadata.codec().newInstance();
-			} catch (InstantiationException e) {
-			} catch (IllegalAccessException e) {
-			}
-			
-		}
-		
-		if (metadata.as() == EncodingType.PROVIDED) {
-			return null;
-		}
-			
-		return (Codec<E>) get(clz, metadata);
+		return new ObjectCodec<E>(clz);
 	}
 	
-	public static Codec<?> get(Class<?> type, Encode metadata) {
+	public static Codec<?> get(Field field) {
 		
-		switch (metadata.as()) {
-		case OBJECT:
-			return new ObjectCodec<Object>(type, metadata);
-		case UNSIGNED_BYTE:
-			return new UnsignedByteCodec(metadata);
-		case UNSIGNED_INT16:
-			return new UnsignedShortCodec(metadata);
-		case UNSIGNED_INT32:
-			return new UnsignedIntCodec(metadata);
+		boolean unsigned = field.isAnnotationPresent(Unsigned.class);
+
+		Class<?> type = field.getType();
+		if (type.equals(Long.class) || type.equals(long.class)) {
+			if (unsigned) {
+				return new UnsignedIntCodec();
+			}
+		} else if (type.isAssignableFrom(Integer.class) || type.isAssignableFrom(int.class)) {
+			if (unsigned) {
+				return new UnsignedShortCodec();
+			}
+		} else if (type.isAssignableFrom(Short.class) || type.isAssignableFrom(short.class)) {
+			if (unsigned) {
+				return new UnsignedByteCodec();
+			}
+		} else {
+			return new ObjectCodec(field.getType());
 		}
 		
 		return null;

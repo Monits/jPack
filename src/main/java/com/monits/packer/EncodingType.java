@@ -7,5 +7,6 @@ public enum EncodingType {
 	UNSIGNED_INT16,
 	UNSIGNED_INT32, 
 	PROVIDED,
+	ARRAY,
 	
 }

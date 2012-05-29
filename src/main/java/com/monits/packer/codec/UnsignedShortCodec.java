@@ -1,32 +1,26 @@
 package com.monits.packer.codec;
 
-import com.monits.packer.annotation.Encode;
+import com.monits.packer.streams.InputByteStream;
+import com.monits.packer.streams.OutputByteStream;
 
-public class UnsignedShortCodec extends Codec<Integer> {
 
-	public UnsignedShortCodec(Encode metadata) {
-		super(metadata);
-	}
+public class UnsignedShortCodec implements Codec<Integer> {
 
 	@Override
-	public byte[] encode(Integer payload, Object[] dependants) {
-		int val = payload;
+	public void encode(OutputByteStream payload, Integer object, Object[] dependants) {
+		int val = object;
 		
-		return new byte[] {
-			(byte) ((0xFF00 & val) >> 8),
-			(byte) (0x00FF & val)
-		};
+		payload.putByte((byte) ((0xFF00 & val) >> 8));
+		payload.putByte((byte) (0x00FF & val));
 	}
 
 	@Override
-	public Integer decode(byte[] payload, Object[] dependants) {
-		return ((((int) payload[0]) & 0xFF) << 8)
-			| (((int) payload[1]) & 0xFF);
-	}
-
-	@Override
-	public int computeSize(Object[] dependants) {
-		return 2;
+	public Integer decode(InputByteStream payload, Object[] dependants) {
+		
+		byte[] data = payload.getBytes(2);
+		
+		return ((((int) data[0]) & 0xFF) << 8)
+			| (((int) data[1]) & 0xFF);
 	}
 
 }
