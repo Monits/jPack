@@ -3,6 +3,7 @@ package com.monits.packer;
 import java.lang.reflect.Field;
 
 import com.monits.packer.annotation.Unsigned;
+import com.monits.packer.annotation.UseCodec;
 import com.monits.packer.codec.Codec;
 import com.monits.packer.codec.ObjectCodec;
 import com.monits.packer.codec.UnsignedByteCodec;
@@ -20,7 +21,15 @@ public class CodecFactory {
 		boolean unsigned = field.isAnnotationPresent(Unsigned.class);
 
 		Class<?> type = field.getType();
-		if (type.equals(Long.class) || type.equals(long.class)) {
+		if (field.isAnnotationPresent(UseCodec.class)) {
+			
+			UseCodec ann = field.getAnnotation(UseCodec.class);
+			try {
+				return (Codec<?>) ann.annotationType().newInstance();
+			} catch (InstantiationException e) {
+			} catch (IllegalAccessException e) {
+			}
+		} else if (type.equals(Long.class) || type.equals(long.class)) {
 			if (unsigned) {
 				return new UnsignedIntCodec();
 			}

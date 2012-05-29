@@ -7,20 +7,8 @@ import com.monits.packer.Packer;
 import com.monits.packer.annotation.Encode;
 import com.monits.packer.annotation.Unsigned;
 
-public class ObjectCodecTest {
 
-	@Test
-	public void testSimpleObject() {
-		 SimpleObject original = new SimpleObject();
-		 original.setValue(5);
-		 
-		 byte[] encoded = Packer.encode(original);
-		 Assert.assertArrayEquals(new byte[] { 00, 05 }, encoded);
-		 
-		 SimpleObject decoded = Packer.decode(SimpleObject.class, encoded);
-		 Assert.assertNotNull(decoded);
-		 Assert.assertEquals(original.getValue(), decoded.getValue());
-	}
+public class NestedObjectTest {
 	
 	@Test
 	public void testComplexObject() {
@@ -35,15 +23,15 @@ public class ObjectCodecTest {
 		
 		byte[] encoded = Packer.encode(original);
 		Assert.assertNotNull(encoded);
-		Assert.assertTrue(encoded.length > 0);
+		Assert.assertEquals(5, encoded.length);
 		
 		ComplexObject decoded = Packer.decode(ComplexObject.class, encoded);
 		
 		Assert.assertNotNull(decoded);
 		Assert.assertNotNull(decoded.getNested());
-		Assert.assertEquals(decoded.getNested().getValue(), original.getNested().getValue());
-		Assert.assertEquals(decoded.getUint(), original.getUint());
-		Assert.assertEquals(decoded.getUshort(), original.getUshort());
+		Assert.assertEquals(original.getNested().getValue(), decoded.getNested().getValue());
+		Assert.assertEquals(original.getUint(), decoded.getUint());
+		Assert.assertEquals(original.getUshort(), decoded.getUshort());
 	}
 	
 	public static class SimpleObject {
@@ -104,4 +92,5 @@ public class ObjectCodecTest {
 		}
 		
 	}
+
 }
