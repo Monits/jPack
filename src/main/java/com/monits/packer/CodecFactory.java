@@ -25,7 +25,7 @@ public class CodecFactory {
 			
 			UseCodec ann = field.getAnnotation(UseCodec.class);
 			try {
-				return (Codec<?>) ann.annotationType().newInstance();
+				return (Codec<?>) ann.value().newInstance();
 			} catch (InstantiationException e) {
 			} catch (IllegalAccessException e) {
 			}
