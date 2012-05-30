@@ -29,7 +29,7 @@ public class CodecFactory {
 			} catch (InstantiationException e) {
 			} catch (IllegalAccessException e) {
 			}
-		} else if (type.equals(Long.class) || type.equals(long.class)) {
+		} else if (type.isAssignableFrom(Long.class) || type.isAssignableFrom(long.class)) {
 			if (unsigned) {
 				return new UnsignedIntCodec();
 			}
