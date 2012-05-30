@@ -72,6 +72,56 @@ public class FixedLengthTest {
 		Packer.encode(original);
 	}
 	
+	@Test
+	public void testNested() {
+		HasNestedObject original = new HasNestedObject();
+		original.setObj(new PrimitiveObject[] {
+			new PrimitiveObject(new int[] { 24, 34 }),
+			new PrimitiveObject(new int[] { 45, 43 }),
+		});
+		
+		byte[] encoded = Packer.encode(original);
+		Assert.assertNotNull(encoded);
+		Assert.assertEquals(8, encoded.length);
+		
+		HasNestedObject decoded = Packer.decode(HasNestedObject.class, encoded);
+		Assert.assertNotNull(decoded);
+		Assert.assertEquals(original, decoded);
+	}
+	
+	public static class HasNestedObject {
+		
+		@Encode(0)
+		@FixedLength(2)
+		private PrimitiveObject[] obj;
+
+		public void setObj(PrimitiveObject[] obj) {
+			assert(obj!= null);
+			assert(obj.length == 2);
+			
+			this.obj = obj;
+		}
+
+		public PrimitiveObject[] getObj() {
+			return obj;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			HasNestedObject other = (HasNestedObject) obj;
+			if (!Arrays.equals(this.obj, other.obj))
+				return false;
+			return true;
+		}
+
+	}
+	
 	public static class StringObject {
 		
 		@Encode(0)
@@ -94,6 +144,15 @@ public class FixedLengthTest {
 		@Unsigned
 		@FixedLength(2)
 		private int[] value;
+		
+		public PrimitiveObject() {
+			super();
+		}
+		
+		public PrimitiveObject(int[] value) {
+			super();
+			this.value = value;
+		}
 
 		public void setValue(int[] value) {
 			assert(value != null);
@@ -104,6 +163,20 @@ public class FixedLengthTest {
 
 		public int[] getValue() {
 			return value;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			} else if (obj == null) {
+				return false;
+			} else if (!(obj instanceof PrimitiveObject)) {
+				return false;
+			}
+			
+			PrimitiveObject other = (PrimitiveObject) obj;
+			return Arrays.equals(value, other.value);
 		}
 		
 	}

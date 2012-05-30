@@ -88,7 +88,7 @@ public class CodecFactory {
 				return new UnsignedByteCodec();
 			}
 		} else {
-			return new ObjectCodec(field.getType());
+			return new ObjectCodec(type);
 		}
 		
 		return null;
