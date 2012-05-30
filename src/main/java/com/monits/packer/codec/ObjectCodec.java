@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.commons.beanutils.ConstructorUtils;
 
 import com.monits.packer.CodecFactory;
+import com.monits.packer.annotation.DependsOn;
 import com.monits.packer.annotation.Encode;
 import com.monits.packer.streams.InputByteStream;
 import com.monits.packer.streams.OutputByteStream;
@@ -48,7 +49,7 @@ public class ObjectCodec<E> implements Codec<E> {
 
 			@Override
 			public int compare(FieldData a, FieldData b) {
-				return b.metadata.value() - a.metadata.value();
+				return a.metadata.value() - b.metadata.value();
 			}
 			
 		});
@@ -68,9 +69,40 @@ public class ObjectCodec<E> implements Codec<E> {
 				return;
 			}
 			
-			field.codec.encode(payload, value, new Object[0]);
+			field.codec.encode(payload, value, buildDependants(obj, field));
 		}
 		
+	}
+	
+	private Object[] buildDependants(E obj, FieldData field) {
+		
+		DependsOn ann = field.field.getAnnotation(DependsOn.class);
+		if (ann == null) {
+			return null;
+		}
+		
+		String[] dependsOn = ann.value();
+		Object[] res = new Object[dependsOn.length];
+		for (int i = 0; i < res.length; i++) {
+			
+			for (FieldData el : fields) {
+				
+				if (el.field.getName().equals(dependsOn[i])) {
+					try {
+						res[i] = el.field.get(obj);
+					} catch (IllegalArgumentException e) {
+						res[i] = null;
+					} catch (IllegalAccessException e) {
+						res[i] = null;
+					}
+					
+					break;
+				}
+			}
+			
+		}
+		
+		return res;
 	}
 
 	@Override
@@ -91,7 +123,7 @@ public class ObjectCodec<E> implements Codec<E> {
 		
 		for (FieldData field : fields) {
 			
-			Object value = field.codec.decode(payload, new Object[0]);
+			Object value = field.codec.decode(payload, buildDependants(res, field));
 			try {
 				field.field.set(res, value);
 			} catch (IllegalArgumentException e) {

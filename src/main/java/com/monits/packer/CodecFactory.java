@@ -2,6 +2,7 @@ package com.monits.packer;
 
 import java.lang.reflect.Field;
 
+import com.monits.packer.annotation.DependsOn;
 import com.monits.packer.annotation.FixedLength;
 import com.monits.packer.annotation.Unsigned;
 import com.monits.packer.annotation.UseCodec;
@@ -12,6 +13,7 @@ import com.monits.packer.codec.ObjectCodec;
 import com.monits.packer.codec.UnsignedByteCodec;
 import com.monits.packer.codec.UnsignedIntCodec;
 import com.monits.packer.codec.UnsignedShortCodec;
+import com.monits.packer.codec.VariableArrayCodec;
 
 public class CodecFactory {
 	
@@ -31,13 +33,32 @@ public class CodecFactory {
 			} catch (InstantiationException e) {
 			} catch (IllegalAccessException e) {
 			}
-		} else {
+		} else if (field.isAnnotationPresent(DependsOn.class)) {
+			return buildVariableLengthCodec(field);
+ 		} else {
 			return buildSimpleCodec(field, field.getType());
 		}
 		
 		return null;
 	}
 	
+	private static Codec<?> buildVariableLengthCodec(Field field) {
+		
+		Class<?> enclosingType = field.getType();
+		if (!enclosingType.isArray()) {
+			return null;
+		}
+		
+		Class<?> type = enclosingType.getComponentType();
+		Codec<Object> codec = buildCodec(field, type);
+		
+		if (codec == null) {
+			return null;
+		}
+		
+		return new VariableArrayCodec(type, codec);
+	}
+
 	private static Codec<?> buildFixedLengthCodec(Field field) {
 		
 		int length = field.getAnnotation(FixedLength.class).value();
@@ -50,25 +71,30 @@ public class CodecFactory {
 		}
 		
 		Class<?> type = enclosingType.getComponentType();
-		Codec<Object> codec = null;
-		
-		if (field.isAnnotationPresent(UseCodec.class)) {
-			
-			UseCodec ann = field.getAnnotation(UseCodec.class);
-			try {
-				codec = (Codec<Object>) ann.value().newInstance();
-			} catch (InstantiationException e) {
-			} catch (IllegalAccessException e) {
-			}
-		} else {
-			codec = (Codec<Object>) buildSimpleCodec(field, type);
-		}
+		Codec<Object> codec = buildCodec(field, type);
 		
 		if (codec == null) {
 			return null;
 		}
 		
 		return new FixedArrayCodec(type, codec, length);
+	}
+
+	private static Codec<Object> buildCodec(Field field, Class<?> type) {
+		
+		if (field.isAnnotationPresent(UseCodec.class)) {
+			
+			UseCodec ann = field.getAnnotation(UseCodec.class);
+			try {
+				return (Codec<Object>) ann.value().newInstance();
+			} catch (InstantiationException e) {
+			} catch (IllegalAccessException e) {
+			}
+		} else {
+			return (Codec<Object>) buildSimpleCodec(field, type);
+		}
+		
+		return null;
 	}
 
 	private static Codec<?> buildSimpleCodec(Field field, Class<?> type) {
