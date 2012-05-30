@@ -96,9 +96,6 @@ public class FixedLengthTest {
 		private PrimitiveObject[] obj;
 
 		public void setObj(PrimitiveObject[] obj) {
-			assert(obj!= null);
-			assert(obj.length == 2);
-			
 			this.obj = obj;
 		}
 
@@ -155,9 +152,6 @@ public class FixedLengthTest {
 		}
 
 		public void setValue(int[] value) {
-			assert(value != null);
-			assert(value.length == 2);
-			
 			this.value = value;
 		}
 
