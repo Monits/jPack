@@ -6,7 +6,8 @@ import com.monits.packer.annotation.FixedLength;
 import com.monits.packer.annotation.Unsigned;
 import com.monits.packer.annotation.UseCodec;
 import com.monits.packer.codec.Codec;
-import com.monits.packer.codec.FixedLengthCodec;
+import com.monits.packer.codec.FixedArrayCodec;
+import com.monits.packer.codec.FixedStringCodec;
 import com.monits.packer.codec.ObjectCodec;
 import com.monits.packer.codec.UnsignedByteCodec;
 import com.monits.packer.codec.UnsignedIntCodec;
@@ -39,12 +40,16 @@ public class CodecFactory {
 	
 	private static Codec<?> buildFixedLengthCodec(Field field) {
 		
-		Class<?> arrayType = field.getType();
-		if (!arrayType.isArray()) {
+		int length = field.getAnnotation(FixedLength.class).value();
+		Class<?> enclosingType = field.getType();
+		
+		if (enclosingType.isAssignableFrom(String.class)) {
+			return new FixedStringCodec(length);
+		} else if (!enclosingType.isArray()) {
 			return null;
 		}
 		
-		Class<?> type = arrayType.getComponentType();
+		Class<?> type = enclosingType.getComponentType();
 		Codec<Object> codec = null;
 		
 		if (field.isAnnotationPresent(UseCodec.class)) {
@@ -63,7 +68,7 @@ public class CodecFactory {
 			return null;
 		}
 		
-		return new FixedLengthCodec(type, codec, field.getAnnotation(FixedLength.class).value());
+		return new FixedArrayCodec(type, codec, length);
 	}
 
 	private static Codec<?> buildSimpleCodec(Field field, Class<?> type) {

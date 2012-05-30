@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.beanutils.ConstructorUtils;
-import org.apache.commons.beanutils.MethodUtils;
 
 import com.monits.packer.CodecFactory;
 import com.monits.packer.annotation.Encode;
@@ -32,7 +31,11 @@ public class ObjectCodec<E> implements Codec<E> {
 				FieldData data = new FieldData();
 				
 				data.metadata = annotation;
-				data.codec = CodecFactory.get(field);
+				data.codec = (Codec<Object>) CodecFactory.get(field);
+				
+				if (data.codec == null) {
+					continue;
+				}
 				
 				data.field = field;
 				data.field.setAccessible(true);
@@ -56,20 +59,16 @@ public class ObjectCodec<E> implements Codec<E> {
 		
 		for (FieldData field : fields) {
 			
+			Object value;
 			try {
-				Object value = field.field.get(obj);
-				Object[] params = new Object[] { payload, value, new Object[0] };
-				MethodUtils.invokeMethod(field.codec, "encode", params);
+				value = field.field.get(obj);
 			} catch (IllegalArgumentException e) {
 				return;
 			} catch (IllegalAccessException e) {
 				return;
-			} catch (InvocationTargetException e) {
-				return;
-			} catch (NoSuchMethodException e) {
-				return;
 			}
 			
+			field.codec.encode(payload, value, new Object[0]);
 		}
 		
 	}
@@ -92,17 +91,12 @@ public class ObjectCodec<E> implements Codec<E> {
 		
 		for (FieldData field : fields) {
 			
+			Object value = field.codec.decode(payload, new Object[0]);
 			try {
-				Object[] params = new Object[] { payload, new Object[0] };
-				Object value = MethodUtils.invokeMethod(field.codec, "decode", params);
 				field.field.set(res, value);
 			} catch (IllegalArgumentException e) {
 				return null;
 			} catch (IllegalAccessException e) {
-				return null;
-			} catch (InvocationTargetException e) {
-				return null;
-			} catch (NoSuchMethodException e) {
 				return null;
 			}
 			
@@ -117,7 +111,7 @@ public class ObjectCodec<E> implements Codec<E> {
 		
 		Field field;
 		
-		Codec<?> codec;
+		Codec<Object> codec;
 	}
 
 
