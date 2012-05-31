@@ -1,5 +1,6 @@
 package com.monits.packer.codec;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 
 import com.monits.packer.streams.InputByteStream;
@@ -29,7 +30,7 @@ public class FixedStringCodec implements Codec<String> {
 	}
 
 	@Override
-	public String decode(InputByteStream payload, Object[] dependants) {
+	public String decode(InputByteStream payload, Object[] dependants) throws IOException {
 		return new String(payload.getBytes(length), Charset.forName("ascii"));
 	}
 

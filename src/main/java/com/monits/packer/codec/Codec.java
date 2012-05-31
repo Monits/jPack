@@ -1,5 +1,7 @@
 package com.monits.packer.codec;
 
+import java.io.IOException;
+
 import com.monits.packer.streams.InputByteStream;
 import com.monits.packer.streams.OutputByteStream;
 
@@ -7,6 +9,6 @@ public interface Codec<E> {
 
 	public boolean encode(OutputByteStream payload, E object, Object[] dependants);
 
-	public E decode(InputByteStream payload, Object[] dependants);
+	public E decode(InputByteStream payload, Object[] dependants) throws IOException;
 	
 }

@@ -1,5 +1,6 @@
 package com.monits.packer.codec;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 
 import com.monits.packer.streams.InputByteStream;
@@ -49,7 +50,7 @@ public class VariableArrayCodec implements Codec<Object> {
 	}
 
 	@Override
-	public Object decode(InputByteStream payload, Object[] dependants) {
+	public Object decode(InputByteStream payload, Object[] dependants) throws IOException {
 		
 		long length = getLength(dependants);
 		

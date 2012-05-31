@@ -33,9 +33,4 @@ public class InputByteStreamImpl implements InputByteStream {
 		return data[pos++];
 	}
 	
-	@Override
-	public boolean hasRemaining() {
-		return pos < data.length - 1;
-	}
-	
 }

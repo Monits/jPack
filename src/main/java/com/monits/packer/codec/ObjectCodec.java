@@ -1,5 +1,6 @@
 package com.monits.packer.codec;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -109,7 +110,7 @@ public class ObjectCodec<E> implements Codec<E> {
 	}
 
 	@Override
-	public E decode(InputByteStream payload, Object[] dependants) {
+	public E decode(InputByteStream payload, Object[] dependants) throws IOException {
 		
 		E res;
 		try {

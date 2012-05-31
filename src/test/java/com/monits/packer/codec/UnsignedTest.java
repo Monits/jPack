@@ -12,7 +12,7 @@ public class UnsignedTest {
 	@Test
 	public void testSimpleObject() {
 		 SimpleObject original = new SimpleObject();
-		 original.setUshort((short) 5);
+		 original.setUshort((short) 255);
 		 original.setUint(256);
 		 original.setUlong(153456L);
 		 

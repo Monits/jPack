@@ -1,5 +1,7 @@
 package com.monits.packer.codec;
 
+import java.io.IOException;
+
 import com.monits.packer.streams.InputByteStream;
 import com.monits.packer.streams.OutputByteStream;
 
@@ -19,7 +21,7 @@ public class UnsignedIntCodec implements Codec<Long> {
 	}
 
 	@Override
-	public Long decode(InputByteStream payload, Object[] dependants) {
+	public Long decode(InputByteStream payload, Object[] dependants) throws IOException {
 		
 		byte[] data = payload.getBytes(4);
 		

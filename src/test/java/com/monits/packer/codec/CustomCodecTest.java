@@ -1,5 +1,7 @@
 package com.monits.packer.codec;
 
+import java.io.IOException;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -58,7 +60,7 @@ public class CustomCodecTest {
 		}
 
 		@Override
-		public Integer decode(InputByteStream payload, Object[] dependants) {
+		public Integer decode(InputByteStream payload, Object[] dependants) throws IOException {
 			byte[] bytes = payload.getBytes(4);
 			return (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
 		}
