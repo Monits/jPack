@@ -6,6 +6,9 @@ import com.monits.packer.streams.OutputByteStreamImpl;
 
 public class Packer {
 	
+	private Packer() {
+	}
+	
 	public static <E> E decode(Class<? extends E> clz, byte[] payload) {
 		ObjectCodec<E> codec = new ObjectCodec<E>(clz);
 		return codec.decode(new InputByteStreamImpl(payload), new Object[0]);

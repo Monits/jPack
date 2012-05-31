@@ -56,7 +56,7 @@ public class ObjectCodec<E> implements Codec<E> {
 	}
 	
 	@Override
-	public void encode(OutputByteStream payload, E obj, Object[] dependants) {
+	public boolean encode(OutputByteStream payload, E obj, Object[] dependants) {
 		
 		for (FieldData field : fields) {
 			
@@ -64,14 +64,17 @@ public class ObjectCodec<E> implements Codec<E> {
 			try {
 				value = field.field.get(obj);
 			} catch (IllegalArgumentException e) {
-				return;
+				return false;
 			} catch (IllegalAccessException e) {
-				return;
+				return false;
 			}
 			
-			field.codec.encode(payload, value, buildDependants(obj, field));
+			if (!field.codec.encode(payload, value, buildDependants(obj, field))) {
+				return false;
+			}
 		}
 		
+		return true;
 	}
 	
 	private Object[] buildDependants(E obj, FieldData field) {

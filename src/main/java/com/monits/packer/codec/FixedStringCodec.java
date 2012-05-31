@@ -15,7 +15,7 @@ public class FixedStringCodec implements Codec<String> {
 	}
 
 	@Override
-	public void encode(OutputByteStream payload, String object, Object[] dependants) {
+	public boolean encode(OutputByteStream payload, String object, Object[] dependants) {
 		
 		if (object.length() != length) {
 			throw new IllegalArgumentException("The string is not of length " + length);
@@ -24,6 +24,8 @@ public class FixedStringCodec implements Codec<String> {
 		for (byte el : object.getBytes(Charset.forName("ascii"))) {
 			payload.putByte(el);
 		}
+		
+		return true;
 	}
 
 	@Override

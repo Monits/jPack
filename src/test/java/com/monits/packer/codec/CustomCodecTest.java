@@ -48,11 +48,13 @@ public class CustomCodecTest {
 	public static class IntCodec implements Codec<Integer> {
 
 		@Override
-		public void encode(OutputByteStream payload, Integer object, Object[] dependants) {
+		public boolean encode(OutputByteStream payload, Integer object, Object[] dependants) {
 			payload.putByte((byte) ((0xFF000000 & object) >> 24));
 			payload.putByte((byte) ((0x00FF0000 & object) >> 16));
 			payload.putByte((byte) ((0x0000FF00 & object) >> 8));
 			payload.putByte((byte) ((0x000000FF & object)));
+			
+			return true;
 		}
 
 		@Override

@@ -18,7 +18,7 @@ public class VariableArrayCodec implements Codec<Object> {
 	}
 
 	@Override
-	public void encode(OutputByteStream payload, Object object, Object[] dependants) {
+	public boolean encode(OutputByteStream payload, Object object, Object[] dependants) {
 		
 		long length = getLength(dependants);
 		
@@ -27,8 +27,12 @@ public class VariableArrayCodec implements Codec<Object> {
 		}
 		
 		for (int i = 0; i < length; i++) {
-			codec.encode(payload, Array.get(object, i), dependants);
+			if (!codec.encode(payload, Array.get(object, i), dependants)) {
+				return true;
+			}
 		}
+		
+		return true;
 	}
 
 	private long getLength(Object[] dependants) {

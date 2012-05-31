@@ -7,11 +7,13 @@ import com.monits.packer.streams.OutputByteStream;
 public class UnsignedShortCodec implements Codec<Integer> {
 
 	@Override
-	public void encode(OutputByteStream payload, Integer object, Object[] dependants) {
+	public boolean encode(OutputByteStream payload, Integer object, Object[] dependants) {
 		int val = object;
 		
 		payload.putByte((byte) ((0xFF00 & val) >> 8));
 		payload.putByte((byte) (0x00FF & val));
+		
+		return true;
 	}
 
 	@Override

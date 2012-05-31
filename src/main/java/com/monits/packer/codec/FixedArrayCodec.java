@@ -21,16 +21,19 @@ public class FixedArrayCodec implements Codec<Object> {
 	}
 
 	@Override
-	public void encode(OutputByteStream payload, Object object, Object[] dependants) {
+	public boolean encode(OutputByteStream payload, Object object, Object[] dependants) {
 
 		if (length != Array.getLength(object)) {
 			throw new IllegalArgumentException("The object is not an array of length " + length);
 		}
 		
 		for (int i = 0; i < length; i++) {
-			codec.encode(payload, Array.get(object, i), dependants);
+			if (!codec.encode(payload, Array.get(object, i), dependants)) {
+				return false;
+			}
 		}
 		
+		return true;
 	}
 
 	@Override

@@ -17,6 +17,9 @@ import com.monits.packer.codec.VariableArrayCodec;
 
 public class CodecFactory {
 	
+	private CodecFactory() {
+	}
+	
 	public static <E> Codec<E> get(Class <E> clz) {
 		return new ObjectCodec<E>(clz);
 	}
@@ -31,15 +34,17 @@ public class CodecFactory {
 			try {
 				return (Codec<?>) ann.value().newInstance();
 			} catch (InstantiationException e) {
+				return null;
 			} catch (IllegalAccessException e) {
+				return null;
 			}
+			
 		} else if (field.isAnnotationPresent(DependsOn.class)) {
 			return buildVariableLengthCodec(field);
  		} else {
 			return buildSimpleCodec(field, field.getType());
 		}
 		
-		return null;
 	}
 	
 	private static Codec<?> buildVariableLengthCodec(Field field) {
@@ -88,13 +93,13 @@ public class CodecFactory {
 			try {
 				return (Codec<Object>) ann.value().newInstance();
 			} catch (InstantiationException e) {
+				return null;
 			} catch (IllegalAccessException e) {
+				return null;
 			}
 		} else {
 			return (Codec<Object>) buildSimpleCodec(field, type);
 		}
-		
-		return null;
 	}
 
 	private static Codec<?> buildSimpleCodec(Field field, Class<?> type) {

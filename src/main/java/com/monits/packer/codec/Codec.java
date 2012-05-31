@@ -5,7 +5,7 @@ import com.monits.packer.streams.OutputByteStream;
 
 public interface Codec<E> {
 
-	public void encode(OutputByteStream payload, E object, Object[] dependants);
+	public boolean encode(OutputByteStream payload, E object, Object[] dependants);
 
 	public E decode(InputByteStream payload, Object[] dependants);
 	
