@@ -6,6 +6,7 @@ import com.monits.packer.annotation.DependsOn;
 import com.monits.packer.annotation.FixedLength;
 import com.monits.packer.annotation.Unsigned;
 import com.monits.packer.annotation.UseCodec;
+import com.monits.packer.codec.ByteCodec;
 import com.monits.packer.codec.Codec;
 import com.monits.packer.codec.FixedArrayCodec;
 import com.monits.packer.codec.FixedStringCodec;
@@ -118,6 +119,8 @@ public class CodecFactory {
 			if (unsigned) {
 				return new UnsignedByteCodec();
 			}
+		} else if (type.isAssignableFrom(Byte.class) || type.isAssignableFrom(byte.class)) {
+			return new ByteCodec();
 		} else {
 			return new ObjectCodec(type);
 		}
