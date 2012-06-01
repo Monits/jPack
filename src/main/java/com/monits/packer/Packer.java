@@ -14,7 +14,7 @@ public class Packer {
 	public static <E> E decode(Class<? extends E> clz, byte[] payload) {
 		Codec<? extends E> codec = CodecFactory.get(clz);
 		try {
-			return codec.decode(new InputByteStreamImpl(payload), new Object[0]);
+			return codec.decode(new InputByteStreamImpl(payload), null);
 		} catch (IOException e) {
 			return null;
 		}
@@ -25,7 +25,7 @@ public class Packer {
 		@SuppressWarnings("unchecked")
 		Codec<E> codec = CodecFactory.get((Class<E>) payload.getClass());
 		OutputByteStreamImpl output = new OutputByteStreamImpl();
-		codec.encode(output, payload, new Object[0]);
+		codec.encode(output, payload, null);
 		
 		return output.getData();
 	}
