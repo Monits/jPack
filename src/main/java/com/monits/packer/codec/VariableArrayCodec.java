@@ -39,13 +39,13 @@ public class VariableArrayCodec implements Codec<Object> {
 	private long getLength(Object[] dependants) {
 
 		if (dependants.length == 0 || dependants[0] == null) {
-			throw new IllegalArgumentException("Was expecting array length as dependant");
+			throw new IllegalArgumentException("Was expecting array length as dependant. Use @DependsOn({ \"fieldSpecifyingLength\"})");
 		}
 		
 		try {
 			return Long.parseLong(dependants[0].toString());
 		} catch (ClassCastException e) {
-			throw new IllegalArgumentException("Was expecting array length as dependant, got non numeric value");
+			throw new IllegalArgumentException("Was expecting array length as dependant, got non numeric value.");
 		}
 	}
 
