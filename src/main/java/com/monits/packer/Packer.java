@@ -2,7 +2,7 @@ package com.monits.packer;
 
 import java.io.IOException;
 
-import com.monits.packer.codec.ObjectCodec;
+import com.monits.packer.codec.Codec;
 import com.monits.packer.streams.InputByteStreamImpl;
 import com.monits.packer.streams.OutputByteStreamImpl;
 
@@ -12,7 +12,7 @@ public class Packer {
 	}
 	
 	public static <E> E decode(Class<? extends E> clz, byte[] payload) {
-		ObjectCodec<E> codec = new ObjectCodec<E>(clz);
+		Codec<? extends E> codec = CodecFactory.get(clz);
 		try {
 			return codec.decode(new InputByteStreamImpl(payload), new Object[0]);
 		} catch (IOException e) {
@@ -22,7 +22,8 @@ public class Packer {
 	
 	public static <E> byte[] encode(E payload) {
 		
-		ObjectCodec<E> codec = new ObjectCodec<E>((Class<? extends E>) payload.getClass());
+		@SuppressWarnings("unchecked")
+		Codec<E> codec = CodecFactory.get((Class<E>) payload.getClass());
 		OutputByteStreamImpl output = new OutputByteStreamImpl();
 		codec.encode(output, payload, new Object[0]);
 		
