@@ -11,6 +11,14 @@ public class Packer {
 	private Packer() {
 	}
 	
+	/**
+	 * Create a new instance of <E> using the data in payload. 
+	 * 
+	 * @param clz     The object's class.
+	 * @param payload The bytes to build the object from
+	 * 
+	 * @return The built object or null on failure.
+	 */
 	public static <E> E decode(Class<? extends E> clz, byte[] payload) {
 		Codec<? extends E> codec = CodecFactory.get(clz);
 		try {
@@ -20,6 +28,13 @@ public class Packer {
 		}
 	}
 	
+	/**
+	 * Encode an object into an array of bytes.
+	 * 
+	 * @param payload The object to encode.
+	 * 
+	 * @return The bytes resulting from encoding the object.
+	 */
 	public static <E> byte[] encode(E payload) {
 		
 		@SuppressWarnings("unchecked")

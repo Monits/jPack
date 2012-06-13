@@ -20,11 +20,31 @@ public class CodecFactory {
 	
 	private CodecFactory() {
 	}
-	
+
+	/**
+	 * Get the {@link Codec} for a given type.
+	 * 
+	 * @param clz The type to get the codec for.
+	 * 
+	 * @return A codec
+	 */
 	public static <E> Codec<E> get(Class <E> clz) {
 		return new ObjectCodec<E>(clz);
 	}
 	
+	/**
+	 * Get a suitable codec given a Field object.
+	 * 
+	 * This method is for internal use. Do not use it unless you're
+	 * <b>reaaaaaaaaaaaaaaaaaaaally</b> sure of what you're doing.
+	 * 
+	 * This checks the annotations present in the field to detect the most 
+	 * suitable codec for the given field.
+	 * 
+	 * @param field The field that needs a codec.
+	 * 
+	 * @return The most suitable codec, or null if none was found.
+	 */
 	public static Codec<?> get(Field field) {
 		
 		if (field.isAnnotationPresent(FixedLength.class)) {
@@ -47,7 +67,7 @@ public class CodecFactory {
 		}
 		
 	}
-	
+
 	private static Codec<?> buildVariableLengthCodec(Field field) {
 		
 		Class<?> enclosingType = field.getType();
