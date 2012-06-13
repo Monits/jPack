@@ -2,7 +2,6 @@ package com.monits.packer.codec;
 
 import junit.framework.Assert;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.monits.packer.Packer;
@@ -13,7 +12,6 @@ import com.monits.packer.annotation.Unsigned;
 
 public class InvalidAnnotationTest {
 	
-	@Ignore
 	@Test
 	public void testInvalidFixedLength() {
 		InvalidFixedLengthObject original = new InvalidFixedLengthObject();
@@ -21,7 +19,7 @@ public class InvalidAnnotationTest {
 		
 		byte[] encoded = Packer.encode(original);
 		Assert.assertNotNull(encoded);
-		Assert.assertEquals(2, encoded.length);
+		Assert.assertEquals(4, encoded.length);
 		
 		InvalidFixedLengthObject decoded = Packer.decode(InvalidFixedLengthObject.class, encoded);
 		Assert.assertNotNull(decoded);
@@ -46,22 +44,23 @@ public class InvalidAnnotationTest {
 		
 		@Encode(0)
 		@FixedLength(2)
-		private int value;
+		@Unsigned
+		private long value;
 		
 		public InvalidFixedLengthObject() {
 			super();
 		}
 		
-		public InvalidFixedLengthObject(int value) {
+		public InvalidFixedLengthObject(long value) {
 			super();
 			this.value = value;
 		}
 
-		public void setValue(int value) {
+		public void setValue(long value) {
 			this.value = value;
 		}
 
-		public int getValue() {
+		public long getValue() {
 			return value;
 		}
 	}

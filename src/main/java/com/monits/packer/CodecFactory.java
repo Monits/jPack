@@ -47,8 +47,12 @@ public class CodecFactory {
 	 */
 	public static Codec<?> get(Field field) {
 		
+		Codec<?> codec = null;
+		
 		if (field.isAnnotationPresent(FixedLength.class)) {
-			return buildFixedLengthCodec(field);
+			codec = buildFixedLengthCodec(field);
+		} else if (field.isAnnotationPresent(DependsOn.class)) {
+			codec = buildVariableLengthCodec(field);
 		} else if (field.isAnnotationPresent(UseCodec.class)) {
 			
 			UseCodec ann = field.getAnnotation(UseCodec.class);
@@ -60,10 +64,12 @@ public class CodecFactory {
 				return null;
 			}
 			
-		} else if (field.isAnnotationPresent(DependsOn.class)) {
-			return buildVariableLengthCodec(field);
- 		} else {
+ 		}
+		
+		if (codec == null) {
 			return buildSimpleCodec(field, field.getType());
+		} else {
+			return codec;
 		}
 		
 	}
