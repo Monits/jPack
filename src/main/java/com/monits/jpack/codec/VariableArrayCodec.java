@@ -1,10 +1,10 @@
-package com.monits.packer.codec;
+package com.monits.jpack.codec;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
 
-import com.monits.packer.streams.InputByteStream;
-import com.monits.packer.streams.OutputByteStream;
+import com.monits.jpack.streams.InputByteStream;
+import com.monits.jpack.streams.OutputByteStream;
 
 public class VariableArrayCodec implements Codec<Object> {
 	

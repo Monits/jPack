@@ -1,10 +1,10 @@
-package com.monits.packer;
+package com.monits.jpack;
 
 import java.io.IOException;
 
-import com.monits.packer.codec.Codec;
-import com.monits.packer.streams.InputByteStreamImpl;
-import com.monits.packer.streams.OutputByteStreamImpl;
+import com.monits.jpack.codec.Codec;
+import com.monits.jpack.streams.InputByteStreamImpl;
+import com.monits.jpack.streams.OutputByteStreamImpl;
 
 public class Packer {
 	

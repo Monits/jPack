@@ -6,10 +6,10 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.monits.packer.Packer;
-import com.monits.packer.annotation.Encode;
-import com.monits.packer.annotation.FixedLength;
-import com.monits.packer.annotation.Unsigned;
+import com.monits.jpack.Packer;
+import com.monits.jpack.annotation.Encode;
+import com.monits.jpack.annotation.FixedLength;
+import com.monits.jpack.annotation.Unsigned;
 
 
 public class FixedLengthTest {

@@ -1,4 +1,4 @@
-package com.monits.packer.streams;
+package com.monits.jpack.streams;
 
 import java.io.IOException;
 

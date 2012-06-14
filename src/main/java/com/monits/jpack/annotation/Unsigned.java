@@ -1,4 +1,4 @@
-package com.monits.packer.annotation;
+package com.monits.jpack.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

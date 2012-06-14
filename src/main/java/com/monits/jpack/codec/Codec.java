@@ -1,9 +1,9 @@
-package com.monits.packer.codec;
+package com.monits.jpack.codec;
 
 import java.io.IOException;
 
-import com.monits.packer.streams.InputByteStream;
-import com.monits.packer.streams.OutputByteStream;
+import com.monits.jpack.streams.InputByteStream;
+import com.monits.jpack.streams.OutputByteStream;
 
 /**
  * Defines a encoder/decoder for the type <E> or it's subclasses.

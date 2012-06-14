@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.monits</groupId>
-    <artifactId>packer</artifactId>
+    <artifactId>jpack</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>packer</name>
+    <name>jPack</name>
 
     <description>A set of classes to treat POJO as network-friendly structs</description>
 
@@ -26,7 +26,7 @@
     </repositories>
 
     <build>
-        <finalName>packer</finalName>
+        <finalName>jpack</finalName>
     </build>
 
     <reporting>

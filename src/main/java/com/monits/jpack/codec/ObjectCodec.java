@@ -1,4 +1,4 @@
-package com.monits.packer.codec;
+package com.monits.jpack.codec;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -10,11 +10,11 @@ import java.util.List;
 
 import org.apache.commons.beanutils.ConstructorUtils;
 
-import com.monits.packer.CodecFactory;
-import com.monits.packer.annotation.DependsOn;
-import com.monits.packer.annotation.Encode;
-import com.monits.packer.streams.InputByteStream;
-import com.monits.packer.streams.OutputByteStream;
+import com.monits.jpack.CodecFactory;
+import com.monits.jpack.annotation.DependsOn;
+import com.monits.jpack.annotation.Encode;
+import com.monits.jpack.streams.InputByteStream;
+import com.monits.jpack.streams.OutputByteStream;
 
 public class ObjectCodec<E> implements Codec<E> {
 	

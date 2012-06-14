@@ -1,20 +1,20 @@
-package com.monits.packer;
+package com.monits.jpack;
 
 import java.lang.reflect.Field;
 
-import com.monits.packer.annotation.DependsOn;
-import com.monits.packer.annotation.FixedLength;
-import com.monits.packer.annotation.Unsigned;
-import com.monits.packer.annotation.UseCodec;
-import com.monits.packer.codec.ByteCodec;
-import com.monits.packer.codec.Codec;
-import com.monits.packer.codec.FixedArrayCodec;
-import com.monits.packer.codec.FixedStringCodec;
-import com.monits.packer.codec.ObjectCodec;
-import com.monits.packer.codec.UnsignedByteCodec;
-import com.monits.packer.codec.UnsignedIntCodec;
-import com.monits.packer.codec.UnsignedShortCodec;
-import com.monits.packer.codec.VariableArrayCodec;
+import com.monits.jpack.annotation.DependsOn;
+import com.monits.jpack.annotation.FixedLength;
+import com.monits.jpack.annotation.Unsigned;
+import com.monits.jpack.annotation.UseCodec;
+import com.monits.jpack.codec.ByteCodec;
+import com.monits.jpack.codec.Codec;
+import com.monits.jpack.codec.FixedArrayCodec;
+import com.monits.jpack.codec.FixedStringCodec;
+import com.monits.jpack.codec.ObjectCodec;
+import com.monits.jpack.codec.UnsignedByteCodec;
+import com.monits.jpack.codec.UnsignedIntCodec;
+import com.monits.jpack.codec.UnsignedShortCodec;
+import com.monits.jpack.codec.VariableArrayCodec;
 
 public class CodecFactory {
 	

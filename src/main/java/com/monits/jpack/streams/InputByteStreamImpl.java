@@ -1,4 +1,4 @@
-package com.monits.packer.streams;
+package com.monits.jpack.streams;
 
 public class InputByteStreamImpl implements InputByteStream {
 

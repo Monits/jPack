@@ -6,11 +6,12 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.monits.packer.Packer;
-import com.monits.packer.annotation.Encode;
-import com.monits.packer.annotation.UseCodec;
-import com.monits.packer.streams.InputByteStream;
-import com.monits.packer.streams.OutputByteStream;
+import com.monits.jpack.Packer;
+import com.monits.jpack.annotation.Encode;
+import com.monits.jpack.annotation.UseCodec;
+import com.monits.jpack.codec.Codec;
+import com.monits.jpack.streams.InputByteStream;
+import com.monits.jpack.streams.OutputByteStream;
 
 
 public class CustomCodecTest {

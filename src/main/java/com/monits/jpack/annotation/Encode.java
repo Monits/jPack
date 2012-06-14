@@ -1,4 +1,4 @@
-package com.monits.packer.annotation;
+package com.monits.jpack.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -6,20 +6,23 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.monits.packer.codec.Codec;
-
 /**
- * Declare that a field uses a custom codec.
+ * Declare that a field is to be encoded.
  * 
- * All other annotations applied to this field, except for {@link Encode} and {@link DependsOn}, are ignored.
+ * Any field in an object that is to encoded/decoded without this annotation is ignored.
  * 
  * @author jpcivile
  */
 @Target(value = { ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface UseCodec {
+public @interface Encode {
 
-	public Class<? extends Codec<?>> value();
+	/**
+	 * 
+	 * 
+	 * @return
+	 */
+	public int value(); 
 	
 }
