@@ -19,11 +19,11 @@ public class FixedLengthTest {
 		PrimitiveObject original = new PrimitiveObject();
 		original.setValue(new int[] { 56323, 123 });
 		
-		byte[] encoded = Packer.encode(original);
+		byte[] encoded = Packer.pack(original);
 		Assert.assertNotNull(encoded);
 		Assert.assertEquals(4, encoded.length);
 		
-		PrimitiveObject decoded = Packer.decode(PrimitiveObject.class, encoded);
+		PrimitiveObject decoded = Packer.unpack(PrimitiveObject.class, encoded);
 		Assert.assertNotNull(decoded);
 		Assert.assertTrue(Arrays.equals(original.getValue(), decoded.getValue()));
 	}
@@ -33,22 +33,22 @@ public class FixedLengthTest {
 		StringObject original = new StringObject();
 		original.setValue("asdq");
 		
-		byte[] encoded = Packer.encode(original);
+		byte[] encoded = Packer.pack(original);
 		Assert.assertNotNull(encoded);
 		Assert.assertEquals(4, encoded.length);
 		
-		StringObject decoded = Packer.decode(StringObject.class, encoded);
+		StringObject decoded = Packer.unpack(StringObject.class, encoded);
 		Assert.assertNotNull(decoded);
 		Assert.assertEquals(original.getValue(), decoded.getValue());
 		
 		StringObject second = new StringObject();
 		second.setValue("qwew");
 		
-		byte[] secondEncoded = Packer.encode(second);
+		byte[] secondEncoded = Packer.pack(second);
 		Assert.assertNotNull(secondEncoded);
 		Assert.assertEquals(4, secondEncoded.length);
 		
-		StringObject secondDecoded = Packer.decode(StringObject.class, secondEncoded);
+		StringObject secondDecoded = Packer.unpack(StringObject.class, secondEncoded);
 		Assert.assertNotNull(secondDecoded);
 		Assert.assertEquals(second.getValue(), secondDecoded.getValue());
 		
@@ -61,7 +61,7 @@ public class FixedLengthTest {
 		PrimitiveObject original = new PrimitiveObject();
 		original.setValue(new int[] { 123 });
 		
-		Packer.encode(original);
+		Packer.pack(original);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -69,7 +69,7 @@ public class FixedLengthTest {
 		PrimitiveObject original = new PrimitiveObject();
 		original.setValue(new int[] { 123, 456, 23 });
 		
-		Packer.encode(original);
+		Packer.pack(original);
 	}
 	
 	@Test
@@ -80,11 +80,11 @@ public class FixedLengthTest {
 			new PrimitiveObject(new int[] { 45, 43 }),
 		});
 		
-		byte[] encoded = Packer.encode(original);
+		byte[] encoded = Packer.pack(original);
 		Assert.assertNotNull(encoded);
 		Assert.assertEquals(8, encoded.length);
 		
-		HasNestedObject decoded = Packer.decode(HasNestedObject.class, encoded);
+		HasNestedObject decoded = Packer.unpack(HasNestedObject.class, encoded);
 		Assert.assertNotNull(decoded);
 		Assert.assertEquals(original, decoded);
 	}

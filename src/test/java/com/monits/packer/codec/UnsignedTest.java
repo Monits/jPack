@@ -16,11 +16,11 @@ public class UnsignedTest {
 		 original.setUint(256);
 		 original.setUlong(153456L);
 		 
-		 byte[] encoded = Packer.encode(original);
+		 byte[] encoded = Packer.pack(original);
 		 Assert.assertNotNull(encoded);
 		 Assert.assertEquals(7, encoded.length);
 		 
-		 SimpleObject decoded = Packer.decode(SimpleObject.class, encoded);
+		 SimpleObject decoded = Packer.unpack(SimpleObject.class, encoded);
 		 Assert.assertNotNull(decoded);
 		 Assert.assertEquals(original.getUshort(), decoded.getUshort());
 		 Assert.assertEquals(original.getUint(), decoded.getUint());

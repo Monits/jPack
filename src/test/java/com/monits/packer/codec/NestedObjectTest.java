@@ -21,11 +21,11 @@ public class NestedObjectTest {
 		original.setUint(232);
 		original.setUshort((short) 255);
 		
-		byte[] encoded = Packer.encode(original);
+		byte[] encoded = Packer.pack(original);
 		Assert.assertNotNull(encoded);
 		Assert.assertEquals(5, encoded.length);
 		
-		ComplexObject decoded = Packer.decode(ComplexObject.class, encoded);
+		ComplexObject decoded = Packer.unpack(ComplexObject.class, encoded);
 		
 		Assert.assertNotNull(decoded);
 		Assert.assertNotNull(decoded.getNested());

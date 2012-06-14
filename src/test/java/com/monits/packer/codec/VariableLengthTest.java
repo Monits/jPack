@@ -18,11 +18,11 @@ public class VariableLengthTest {
 		original.setThing(2);
 		original.setArray(new int[] { 234, 342 });
 		
-		byte[] encoded = Packer.encode(original);
+		byte[] encoded = Packer.pack(original);
 		Assert.assertNotNull(encoded);
 		Assert.assertEquals(6, encoded.length);
 	
-		VariablePrimitive decoded = Packer.decode(VariablePrimitive.class, encoded);
+		VariablePrimitive decoded = Packer.unpack(VariablePrimitive.class, encoded);
 		Assert.assertNotNull(decoded);
 		Assert.assertEquals(original, decoded);
 	}

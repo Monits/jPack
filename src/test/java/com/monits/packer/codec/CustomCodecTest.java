@@ -22,11 +22,11 @@ public class CustomCodecTest {
 		ContainsAnInt object = new ContainsAnInt();
 		object.setValue((int) Math.pow(2, 29));
 		
-		byte[] encoded = Packer.encode(object);
+		byte[] encoded = Packer.pack(object);
 		Assert.assertNotNull(encoded);
 		Assert.assertEquals(4, encoded.length);
 
-		ContainsAnInt decoded = Packer.decode(ContainsAnInt.class, encoded);
+		ContainsAnInt decoded = Packer.unpack(ContainsAnInt.class, encoded);
 		Assert.assertNotNull(decoded);
 		Assert.assertEquals(object.getValue(), decoded.getValue());
 		

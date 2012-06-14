@@ -19,7 +19,7 @@ public class Packer {
 	 * 
 	 * @return The built object or null on failure.
 	 */
-	public static <E> E decode(Class<? extends E> clz, byte[] payload) {
+	public static <E> E unpack(Class<? extends E> clz, byte[] payload) {
 		Codec<? extends E> codec = CodecFactory.get(clz);
 		try {
 			return codec.decode(new InputByteStreamImpl(payload), null);
@@ -35,7 +35,7 @@ public class Packer {
 	 * 
 	 * @return The bytes resulting from encoding the object.
 	 */
-	public static <E> byte[] encode(E payload) {
+	public static <E> byte[] pack(E payload) {
 		
 		@SuppressWarnings("unchecked")
 		Codec<E> codec = CodecFactory.get((Class<E>) payload.getClass());

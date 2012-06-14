@@ -17,11 +17,11 @@ public class InvalidAnnotationTest {
 		InvalidFixedLengthObject original = new InvalidFixedLengthObject();
 		original.setValue(56323);
 		
-		byte[] encoded = Packer.encode(original);
+		byte[] encoded = Packer.pack(original);
 		Assert.assertNotNull(encoded);
 		Assert.assertEquals(4, encoded.length);
 		
-		InvalidFixedLengthObject decoded = Packer.decode(InvalidFixedLengthObject.class, encoded);
+		InvalidFixedLengthObject decoded = Packer.unpack(InvalidFixedLengthObject.class, encoded);
 		Assert.assertNotNull(decoded);
 		Assert.assertEquals(original.getValue(), decoded.getValue());
 	}
@@ -31,11 +31,11 @@ public class InvalidAnnotationTest {
 		InvalidUnsignedObject original = new InvalidUnsignedObject();
 		original.setValue("test");
 		
-		byte[] encoded = Packer.encode(original);
+		byte[] encoded = Packer.pack(original);
 		Assert.assertNotNull(encoded);
 		Assert.assertEquals(4, encoded.length);
 		
-		InvalidUnsignedObject decoded = Packer.decode(InvalidUnsignedObject.class, encoded);
+		InvalidUnsignedObject decoded = Packer.unpack(InvalidUnsignedObject.class, encoded);
 		Assert.assertNotNull(decoded);
 		Assert.assertEquals(original.getValue(), decoded.getValue());
 	}
